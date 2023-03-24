@@ -1,0 +1,24 @@
+{% extends 'main.html' %}
+<!--  -->
+
+{% block content %}
+<div>
+    <h1>Home View!</h1>
+    <h3>Urls</h3>
+    <ul>
+        <li><a href="{% url 'create-post' %}">Create a Post</a></li>
+    </ul>
+    <hr />
+</div>
+<div>
+    <h2>Posts!</h2>
+    <br />
+
+    {% for post in posts %}
+    <div>
+        <a href="{% url 'post' post.slug %}">{{post.id}}- {{post.title}}</a>
+    </div>
+    <hr />
+    {% endfor %}
+</div>
+{% endblock content %}
