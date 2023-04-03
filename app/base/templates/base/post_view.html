@@ -1,23 +1,9 @@
 {% extends 'main.html' %} {% load static %}
 <!--  -->
 
-<style>
-    .parent {
-        display: grid;
-        grid-template-columns: 2fr 3fr;
-    }
-</style>
-
 {% block content %}
-<div class="parent">
-    <div>{{post.content}}</div>
-    <div>
-        {% for image in images %}
-        <div>
-            <img src="{% static image.image.url %}" /> <br />
-            {{image.caption}}
-        </div>
-        {% endfor %}
-    </div>
+<div>
+    <h1>{{post.title|safe}}</h1>
+    <div>{{post.content.html|safe}}</div>
 </div>
 {% endblock content %}

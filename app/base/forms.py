@@ -1,5 +1,6 @@
 from django import forms
-from .models import Post, Image
+
+from .models import Post
 
 
 class PostForm(forms.ModelForm):
@@ -17,10 +18,3 @@ class PostForm(forms.ModelForm):
         model = Post
         fields = "__all__"
         exclude = ["slug"]
-
-
-class ImageForm(forms.ModelForm):
-    class Meta:
-        model = Image
-        fields = "__all__"
-        exclude = ["post"]

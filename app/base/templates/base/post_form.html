@@ -1,12 +1,13 @@
-{% extends 'main.html' %}
+{% extends 'main.html' %} {% load static %}
 <!--  -->
 
 {% block content %}
 <div>
     <form action="" method="POST" enctype="multipart/form-data">
-        {% csrf_token %} {{form.as_p}} Images:
-        <input type="file" name="image" /> <br />
-        image caption: <input name="img-caption" />
+        {% csrf_token %}
+        <!--  -->
+        {{form.media}} {{form.as_p}}
+
         <br />
         <a href="{% url 'home' %}">Go Back Home</a>
         <button type="submit">Save</button>

@@ -1,0 +1,16 @@
+{% extends 'main.html' %} {% load static %}
+<!--  -->
+
+{% block content %}
+<div>
+    <div>Delete Form</div>
+    <form action="" method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div>Are you sure you want to delete {{post}}?</div>
+        <div>
+            <span><a href="{{request.META.HTTP_REFERER}}">Cancel</a></span>
+            <span><button type="submit">Confirm</button></span>
+        </div>
+    </form>
+</div>
+{% endblock content %}

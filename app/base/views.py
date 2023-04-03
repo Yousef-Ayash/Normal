@@ -1,9 +1,8 @@
-from django.shortcuts import render, redirect
-from django.views.generic import TemplateView, View
-from .models import Post, Image
-from .forms import PostForm
+from django.shortcuts import redirect, render
+from django.views.generic import TemplateView
 
-# from .forms import
+from .forms import PostForm
+from .models import Post
 
 
 class HomeView(TemplateView):
@@ -15,35 +14,55 @@ class HomeView(TemplateView):
 
 class CreatePostView(TemplateView):
     def get(self, request):
+        page = "create"
         form = PostForm()
-        images = Image.objects.all()
 
-        context = {"form": form, "images": images}
+        context = {"form": form, "page": page}
         return render(request, "base/post_form.html", context)
 
     def post(self, request):
-        form = PostForm(request.POST or None, request.FILES)
+        form = PostForm(request.POST or None)
 
         if form.is_valid():
             post = form.save(commit=False)
-            image = request.FILES.get("image")
-            caption = request.POST.get("img-caption")
-
             post.save()
-            Image.objects.create(post=post, image=image, caption=caption)
 
             return redirect("home")
+
+
+class UpdatePostView(TemplateView):
+    def get(self, request, slug=None):
+        page = "update"
+        post = Post.objects.get(slug=slug)
+        form = PostForm(instance=post)
+
+        context = {"form": form, "page": page}
+        return render(request, "base/post_form.html", context)
+
+    def post(self, request, slug):
+        post = Post.objects.get(slug=slug)
+        form = PostForm(request.POST or None, request.FILES, instance=post)
+
+        if form.is_valid():
+            form.save()
+
+            return redirect("home")
+
+
+class DeletePostView(TemplateView):
+    def get(self, request, slug=None):
+        post = Post.objects.get(slug=slug)
+        return render(request, "base/delete.html", {"post": post})
+
+    def post(self, request, slug=None):
+        post = Post.objects.get(slug=slug)
+        post.delete()
+        return redirect("home")
 
 
 class PostView(TemplateView):
     def get(self, request, slug=None):
         post = Post.objects.get(slug=slug)
-        images = Image.objects.filter(post__slug=slug)
 
-        context = {"post": post, "images": images}
+        context = {"post": post}
         return render(request, "base/post_view.html", context)
-
-
-# images = request.FILES.getlist('images')
-#         for image in images:
-#             MultipleImage.objects.create(images=image)
