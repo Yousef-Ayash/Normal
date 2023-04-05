@@ -37,6 +37,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "django_session_timeout.middleware.SessionTimeoutMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -125,3 +126,32 @@ MEDIA_ROOT = BASE_DIR / "static/images/"
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Django QuillJs Editor Toolbar Config
+QUILL_CONFIGS = {
+    "default": {
+        "theme": "snow",
+        "modules": {
+            "syntax": True,
+            "toolbar": [
+                [{"size": ["small", False, "large", "huge"]}],
+                ["bold", "italic"],
+                [{"header": 1}, {"header": 2}],
+                [{"list": "ordered"}, {"list": "bullet"}],
+                [{"direction": "rtl"}],
+                [
+                    {"align": ""},
+                    {"align": "center"},
+                    {"align": "right"},
+                    {"align": "justify"},
+                ],
+                ["image", "link"],
+                ["clean"],
+            ],
+        },
+    }
+}
+
+# Session Timeout Configurations
+SESSION_EXPIRE_SECONDS = 1800
+SESSION_TIMEOUT_REDIRECT = "login/"

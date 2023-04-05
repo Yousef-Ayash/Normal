@@ -1,12 +1,19 @@
 from django.contrib import admin
 
-from .models import Post
+from .models import Comment, Post
 
 
-class PostCreate(admin.ModelAdmin):
-    list_display = ["owner", "title", "slug"]
-    search_fields = ["owner", "title", "slug"]
+class PostAdmin(admin.ModelAdmin):
+    list_display = ["title", "owner", "slug"]
+    search_fields = ["title", "owner", "slug"]
     list_per_page = 10
 
 
-admin.site.register(Post, PostCreate)
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ["post", "owner", "content"]
+    search_fields = ["post", "owner", "content"]
+    list_per_page = 10
+
+
+admin.site.register(Post, PostAdmin)
+admin.site.register(Comment, CommentAdmin)

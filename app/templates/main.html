@@ -8,6 +8,14 @@
         <title>Normal - Share your stories</title>
     </head>
     <body>
+        {% if messages %}
+        <ul>
+            {% for message in messages %}
+            <li>{{ message }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        <!--  -->
         {% block content %} {% endblock content %}
     </body>
 </html>
