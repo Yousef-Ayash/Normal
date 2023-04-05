@@ -24,4 +24,5 @@ urlpatterns = [
         name="delete-post",
     ),
     path("post/<slug:slug>", views.PostView.as_view(), name="post"),
+    path("post/<slug:slug>/like/", views.post_like_toggle, name="like-toggle"),
 ]

@@ -75,10 +75,9 @@ class HomeView(TemplateView):
 @method_decorator(login_required(login_url="login"), name="post")
 class CreatePostView(TemplateView):
     def get(self, request):
-        page = "create"
         form = PostForm()
 
-        context = {"form": form, "page": page}
+        context = {"form": form}
         return render(request, "base/post_form.html", context)
 
     def post(self, request):
@@ -96,14 +95,13 @@ class CreatePostView(TemplateView):
 @method_decorator(login_required(login_url="login"), name="post")
 class UpdatePostView(TemplateView):
     def get(self, request, slug=None):
-        page = "update"
         post = Post.objects.get(slug=slug)
         form = PostForm(instance=post)
 
         if request.user != post.owner:
             return HttpResponse("YOU Are Not Allowed HERE!")
 
-        context = {"form": form, "page": page}
+        context = {"form": form}
         return render(request, "base/post_form.html", context)
 
     def post(self, request, slug):
@@ -136,6 +134,31 @@ class DeletePostView(TemplateView):
 class PostView(TemplateView):
     def get(self, request, slug=None):
         post = Post.objects.get(slug=slug)
+        comment_form = CommentForm()
+        comments = Comment.objects.filter(post=post).all()
 
-        context = {"post": post}
+        context = {"post": post, "form": comment_form, "comments": comments}
         return render(request, "base/post_view.html", context)
+
+    def post(self, request, slug=None):
+        post = Post.objects.get(slug=slug)
+        comment_form = CommentForm(request.POST or None)
+
+        if comment_form.is_valid():
+            comment = comment_form.save(commit=False)
+            comment.owner = request.user
+            comment.post = post
+            comment.save()
+            return redirect("post", slug=slug)
+
+
+def post_like_toggle(request, slug=None):
+    post = Post.objects.get(slug=slug)
+    user = request.user
+    if user.is_authenticated:
+        if user in post.likes.all():
+            post.likes.remove(user)
+        else:
+            post.likes.add(user)
+
+    return redirect("post", slug=slug)

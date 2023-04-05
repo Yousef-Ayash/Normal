@@ -1,3 +1,5 @@
 django
 python-dotenv
 pillow
+django-session-timeout
+django-quill-editor

@@ -2,8 +2,37 @@
 <!--  -->
 
 {% block content %}
-<div>
-    <h1>{{post.title|safe}}</h1>
-    <div>{{post.content.html|safe}}</div>
+
+<style>
+    .post-parent {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+    }
+</style>
+<div class="post-parent">
+    <div>
+        <h1>{{post.title|safe}}</h1>
+        <span>{{post.likes.count}} Likes</span> |
+        <span>
+            <a href="{% url 'like-toggle' post.slug %}">
+                {% if request.user in post.likes.all %} UnLike {% else %} Like
+                {% endif %}
+            </a>
+        </span>
+        <div>{{post.content.html|safe}}</div>
+        <hr />
+        <form action="" method="POST" enctype="multipart/form-data">
+            {% csrf_token %} {{form.as_p}}
+            <button type="submit">Comment</button>
+        </form>
+    </div>
+    <div>
+        {% for comment in comments %}
+        <h4>{{comment.owner}}</h4>
+        <span>{{comment.content}}</span>
+        <hr />
+        {% endfor %}
+    </div>
 </div>
+<div><a href="{% url 'home' %}">Back to Home</a></div>
 {% endblock content %}
