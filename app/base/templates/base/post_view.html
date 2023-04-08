@@ -12,13 +12,15 @@
 <div class="post-parent">
     <div>
         <h1>{{post.title|safe}}</h1>
-        <span>{{post.likes.count}} Likes</span> |
+        <span>{{post.likes.count}} Likes</span>
+        {% if request.user.is_authenticated %} |
         <span>
-            <a href="{% url 'like-toggle' post.slug %}">
+            <a href="{% url 'like-toggle' post.owner post.slug %}">
                 {% if request.user in post.likes.all %} UnLike {% else %} Like
                 {% endif %}
             </a>
         </span>
+        {% endif %}
         <div>{{post.content.html|safe}}</div>
         <hr />
         <form action="" method="POST" enctype="multipart/form-data">

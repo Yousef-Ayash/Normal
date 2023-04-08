@@ -1,15 +1,15 @@
+# from accounts.forms import UserForm
+# from accounts.models import User
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.forms import UserCreationForm
-from django.contrib.auth.models import User
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.utils.decorators import method_decorator
 from django.views.generic import TemplateView
 
-from .forms import CommentForm, PostForm
-from .models import Comment, Post
+from .forms import CommentForm, PostForm, UserForm
+from .models import Comment, Post, User
 
 
 class LoginView(TemplateView):
@@ -29,13 +29,20 @@ class LoginView(TemplateView):
             user = User.objects.get(username=username)
         except:
             messages.error(request, "Invalid Username or Password")
+            return redirect("login")
 
+        user_name = user.username
+        pass_word = user.password
         user = authenticate(request, username=username, password=password)
+
         if user is not None:
             login(request, user)
             return redirect("home")
         else:
-            messages.error(request, "User or Password Does Not Exist")
+            messages.error(
+                request, f"User: {user} - Username: {user_name} - Password: {pass_word}"
+            )
+            return redirect("login")
 
 
 def logoutUser(request):
@@ -45,13 +52,13 @@ def logoutUser(request):
 
 class RegisterView(TemplateView):
     def get(self, request):
-        form = UserCreationForm()
+        form = UserForm()
 
         context = {"form": form}
         return render(request, "base/login_register.html", context)
 
     def post(self, request):
-        form = UserCreationForm(request.POST)
+        form = UserForm(request.POST)
 
         if form.is_valid():
             user = form.save(commit=False)
@@ -66,7 +73,7 @@ class RegisterView(TemplateView):
 
 class HomeView(TemplateView):
     def get(self, request):
-        posts = Post.objects.all()
+        posts = Post.objects.filter(is_published=True).all()
         context = {"posts": posts}
         return render(request, "base/home.html", context)
 
@@ -131,17 +138,20 @@ class DeletePostView(TemplateView):
         return redirect("home")
 
 
+@method_decorator(login_required(login_url="login"), name="post")
 class PostView(TemplateView):
-    def get(self, request, slug=None):
-        post = Post.objects.get(slug=slug)
+    def get(self, request, username=None, slug=None):
+        user = User.objects.get(username=username)
+        post = Post.objects.get(owner=user, slug=slug)
         comment_form = CommentForm()
         comments = Comment.objects.filter(post=post).all()
 
         context = {"post": post, "form": comment_form, "comments": comments}
         return render(request, "base/post_view.html", context)
 
-    def post(self, request, slug=None):
-        post = Post.objects.get(slug=slug)
+    def post(self, request, username=None, slug=None):
+        user = User.objects.get(username=username)
+        post = Post.objects.get(owner=user, slug=slug)
         comment_form = CommentForm(request.POST or None)
 
         if comment_form.is_valid():
@@ -149,11 +159,13 @@ class PostView(TemplateView):
             comment.owner = request.user
             comment.post = post
             comment.save()
-            return redirect("post", slug=slug)
+            return redirect("post", username=username, slug=slug)
 
 
-def post_like_toggle(request, slug=None):
-    post = Post.objects.get(slug=slug)
+@login_required(login_url="login")
+def post_like_toggle(request, username=None, slug=None):
+    user_ = User.objects.get(username=username)
+    post = Post.objects.get(owner=user_, slug=slug)
     user = request.user
     if user.is_authenticated:
         if user in post.likes.all():
@@ -161,4 +173,4 @@ def post_like_toggle(request, slug=None):
         else:
             post.likes.add(user)
 
-    return redirect("post", slug=slug)
+    return redirect("post", username=username, slug=slug)

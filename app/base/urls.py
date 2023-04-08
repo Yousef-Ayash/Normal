@@ -23,6 +23,10 @@ urlpatterns = [
         views.DeletePostView.as_view(),
         name="delete-post",
     ),
-    path("post/<slug:slug>", views.PostView.as_view(), name="post"),
-    path("post/<slug:slug>/like/", views.post_like_toggle, name="like-toggle"),
+    path("@<str:username>/post/<slug:slug>", views.PostView.as_view(), name="post"),
+    path(
+        "@<str:username>/post/<slug:slug>/like/",
+        views.post_like_toggle,
+        name="like-toggle",
+    ),
 ]

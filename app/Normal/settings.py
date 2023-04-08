@@ -155,3 +155,7 @@ QUILL_CONFIGS = {
 # Session Timeout Configurations
 SESSION_EXPIRE_SECONDS = 6480000  # 75 Days
 SESSION_TIMEOUT_REDIRECT = "login/"
+
+
+# # Authentication: User Model
+AUTH_USER_MODEL = "base.User"

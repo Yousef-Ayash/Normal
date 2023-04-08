@@ -23,7 +23,9 @@
     <div>
         <span>@{{post.owner}}</span> | <span>{{post.likes.count}} Likes</span>
         <br />
-        <a href="{% url 'post' post.slug %}">{{post.id}}- {{post.title}}</a>
+        <a href="{% url 'post' post.owner post.slug %}">
+            {{post.id}}- {{post.title}}
+        </a>
         {% if request.user == post.owner %} |
         <a href="{% url 'update-post' post.slug %}">Update</a> |
         <a href="{% url 'delete-post' post.slug %}">Delete</a>
