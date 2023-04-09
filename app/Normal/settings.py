@@ -16,9 +16,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG")
+DEBUG = os.environ.get("DEBUG", False)
 
-ALLOWED_HOSTS = list(os.environ.get("HOSTS"))
+ALLOWED_HOSTS = list(os.environ.get("HOSTS", ['localhost', '127.0.0.1']))
 
 
 # Application definition
@@ -95,7 +95,7 @@ AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
-]
+] if not DEBUG else []
 
 
 # Internationalization
@@ -112,7 +112,7 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
-
+STATIC_ROOT = BASE_DIR.parent / "static"
 STATIC_URL = "static/"
 MEDIA_URL = "/images/"
 
@@ -155,7 +155,7 @@ QUILL_CONFIGS = {
 # Session Timeout Configurations
 SESSION_EXPIRE_SECONDS = 6480000  # 75 Days
 SESSION_TIMEOUT_REDIRECT = "login/"
-
+LOGOUT_REDIRECT_URL = '/'
 
 # # Authentication: User Model
 AUTH_USER_MODEL = "base.User"

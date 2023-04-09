@@ -1,74 +1,22 @@
-# from accounts.forms import UserForm
-# from accounts.models import User
-from django.contrib import messages
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponse
 from django.shortcuts import redirect, render
 from django.utils.decorators import method_decorator
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, FormView
 
-from .forms import CommentForm, PostForm, UserForm
+from .forms import CommentForm, PostForm, CustomUserRegistrationForm
 from .models import Comment, Post, User
 
 
-class LoginView(TemplateView):
-    def get(self, request):
-        page = "login"
-        if request.user.is_authenticated:
-            return redirect("home")
+class RegisterView(FormView):
+    form_class = CustomUserRegistrationForm
+    template_name = 'base/register.html'
 
-        context = {"page": page}
-        return render(request, "base/login_register.html", context)
-
-    def post(self, request):
-        username = request.POST.get("username").lower()
-        password = request.POST.get("password")
-
-        try:
-            user = User.objects.get(username=username)
-        except:
-            messages.error(request, "Invalid Username or Password")
-            return redirect("login")
-
-        user_name = user.username
-        pass_word = user.password
-        user = authenticate(request, username=username, password=password)
-
-        if user is not None:
-            login(request, user)
-            return redirect("home")
-        else:
-            messages.error(
-                request, f"User: {user} - Username: {user_name} - Password: {pass_word}"
-            )
-            return redirect("login")
-
-
-def logoutUser(request):
-    logout(request)
-    return redirect("home")
-
-
-class RegisterView(TemplateView):
-    def get(self, request):
-        form = UserForm()
-
-        context = {"form": form}
-        return render(request, "base/login_register.html", context)
-
-    def post(self, request):
-        form = UserForm(request.POST)
-
-        if form.is_valid():
-            user = form.save(commit=False)
-            user.username = user.username.lower()
-            user.save()
-            login(request, user)
-            return redirect("home")
-        else:
-            messages.error(request, form.errors.as_text())
-            return redirect("register")
+    def form_valid(self, form):
+        user = form.save()
+        login(self.request, user)  # Log in the user
+        return redirect('home')  # Redirect to the desired page after successful registration and login
 
 
 class HomeView(TemplateView):
