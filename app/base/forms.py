@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth import password_validation
+from django.contrib.auth.forms import UserCreationForm
 
 from .models import Comment, Post, User
 
@@ -27,20 +27,14 @@ class CommentForm(forms.ModelForm):
         fields = ["content"]
 
 
-class UserForm(forms.ModelForm):
-    password = forms.CharField(
-        label=("Password"),
-        strip=False,
-        widget=forms.PasswordInput(attrs={"autocomplete": "new-password"}),
-        help_text=password_validation.password_validators_help_text_html(),
-    )
-    password_confirm = forms.CharField(
-        label=("Password confirmation"),
-        widget=forms.PasswordInput(attrs={"autocomplete": "new-password"}),
-        strip=False,
-        help_text=("Enter the same password as before, for verification."),
-    )
-
+class CustomUserRegistrationForm(UserCreationForm):
     class Meta:
         model = User
-        fields = ["name", "username", "password", "password_confirm", "avatar", "bio"]
+        fields = ["name", "username", "password1", "password2", "avatar", "bio"]
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.username = user.username.lower()
+        if commit:
+            user.save()
+        return user
