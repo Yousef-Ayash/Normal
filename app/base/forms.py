@@ -18,7 +18,7 @@ class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = "__all__"
-        exclude = ["slug", "owner", "likes"]
+        exclude = ["slug", "owner", "likes", "is_published"]
 
 
 class CommentForm(forms.ModelForm):
@@ -30,11 +30,17 @@ class CommentForm(forms.ModelForm):
 class CustomUserRegistrationForm(UserCreationForm):
     class Meta:
         model = User
-        fields = ["name", "username", "password1", "password2", "avatar", "bio"]
+        fields = ["username", "password1", "password2"]
 
     def save(self, commit=True):
         user = super().save(commit=False)
-        user.username = user.username.lower()
+        user.username = user.username
         if commit:
             user.save()
         return user
+
+
+class UserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ["name", "avatar", "bio"]

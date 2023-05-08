@@ -1,28 +1,39 @@
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
+from django.core.exceptions import PermissionDenied
+from django.db.models import Q
 from django.shortcuts import redirect, render
 from django.utils.decorators import method_decorator
-from django.views.generic import TemplateView, FormView
+from django.views.generic import FormView, TemplateView
 
-from .forms import CommentForm, PostForm, CustomUserRegistrationForm
-from .models import Comment, Post, User
+from .forms import CommentForm, CustomUserRegistrationForm, PostForm, UserForm
+from .models import Comment, Post, Topic, User
 
 
 class RegisterView(FormView):
     form_class = CustomUserRegistrationForm
-    template_name = 'base/register.html'
+    template_name = "base/register.html"
 
     def form_valid(self, form):
         user = form.save()
-        login(self.request, user)  # Log in the user
-        return redirect('home')  # Redirect to the desired page after successful registration and login
+        login(self.request, user)
+        return redirect("home")
 
 
 class HomeView(TemplateView):
     def get(self, request):
-        posts = Post.objects.filter(is_published=True).all()
-        context = {"posts": posts}
+        q = request.GET.get("q") if request.GET.get("q") != None else ""
+
+        posts = Post.objects.filter(
+            Q(owner__name__icontains=q)
+            | Q(owner__username__icontains=q)
+            | Q(topic__name__exact=q)
+            | Q(title__icontains=q)
+        ).filter(is_published=True)
+
+        topics = Topic.objects.all()
+
+        context = {"posts": posts, "topics": topics}
         return render(request, "base/home.html", context)
 
 
@@ -40,10 +51,16 @@ class CreatePostView(TemplateView):
 
         if form.is_valid():
             post = form.save(commit=False)
+
+            if "draft" in request.POST:
+                post.is_published = False
+            elif "publish" in request.POST:
+                post.is_published = True
+
             post.owner = request.user
             post.save()
 
-            return redirect("home")
+            return redirect("post", request.user.username, post.slug)
 
 
 @method_decorator(login_required(login_url="login"), name="get")
@@ -54,19 +71,26 @@ class UpdatePostView(TemplateView):
         form = PostForm(instance=post)
 
         if request.user != post.owner:
-            return HttpResponse("YOU Are Not Allowed HERE!")
+            raise PermissionDenied
 
         context = {"form": form}
         return render(request, "base/post_form.html", context)
 
-    def post(self, request, slug):
+    def post(self, request, slug=None):
         post = Post.objects.get(slug=slug)
         form = PostForm(request.POST or None, request.FILES, instance=post)
 
         if form.is_valid():
-            form.save()
+            post = form.save(commit=False)
 
-            return redirect("home")
+            if "draft" in request.POST:
+                post.is_published = False
+            elif "publish" in request.POST:
+                post.is_published = True
+
+            post.save()
+
+            return redirect("post", request.user.username, post.slug)
 
 
 @method_decorator(login_required(login_url="login"), name="get")
@@ -76,7 +100,7 @@ class DeletePostView(TemplateView):
         post = Post.objects.get(slug=slug)
 
         if request.user != post.owner:
-            return HttpResponse("YOU Are Not Allowed HERE!")
+            raise PermissionDenied
 
         return render(request, "base/delete.html", {"post": post})
 
@@ -94,6 +118,9 @@ class PostView(TemplateView):
         comment_form = CommentForm()
         comments = Comment.objects.filter(post=post).all()
 
+        if request.user != post.owner and post.is_published == False:
+            raise PermissionDenied
+
         context = {"post": post, "form": comment_form, "comments": comments}
         return render(request, "base/post_view.html", context)
 
@@ -108,6 +135,59 @@ class PostView(TemplateView):
             comment.post = post
             comment.save()
             return redirect("post", username=username, slug=slug)
+
+
+class UserView(TemplateView):
+    def get(self, request, username=None):
+        user = User.objects.get(username=username)
+
+        posts = Post.objects.filter(owner__username=username).all()
+        posts_others = (
+            Post.objects.filter(owner__username=username)
+            .filter(is_published=True)
+            .all()
+        )
+
+        context = {"user": user, "posts": posts, "posts_others": posts_others}
+        return render(request, "base/user_view.html", context)
+
+
+@method_decorator(login_required(login_url="login"), name="get")
+@method_decorator(login_required(login_url="login"), name="post")
+class UserUpdate(TemplateView):
+    def get(self, request):
+        user = request.user
+        form = UserForm(instance=user)
+
+        context = {"form": form}
+        return render(request, "base/update_profile.html", context)
+
+    def post(self, request):
+        user = request.user
+        form = UserForm(request.POST, request.FILES, instance=user)
+
+        if form.is_valid():
+            form.save()
+            return redirect("user-profile", request.user.username)
+
+
+@method_decorator(login_required(login_url="login"), name="get")
+@method_decorator(login_required(login_url="login"), name="post")
+class DeleteProfile(TemplateView):
+    def get(self, request):
+        user = request.user
+
+        return render(request, "base/delete_profile.html", {"user": user})
+
+    def post(self, request):
+        user = request.user
+        dl_c = request.POST.get("dl-confirm")
+
+        if dl_c == f"Delete {request.user.username}":
+            user.delete()
+            return redirect("home")
+        else:
+            return redirect("delete-account")
 
 
 @login_required(login_url="login")

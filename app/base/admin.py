@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Comment, Post, User
+from .models import Comment, Post, Topic, User
 
 
 class PostAdmin(admin.ModelAdmin):
@@ -21,7 +21,13 @@ class UserAdmin(admin.ModelAdmin):
     list_per_page = 10
 
 
+class TopicAdmin(admin.ModelAdmin):
+    list_display = ["name", "slug"]
+    search_fields = ["name", "slug"]
+    list_per_page = 10
+
+
 admin.site.register(Post, PostAdmin)
 admin.site.register(Comment, CommentAdmin)
 admin.site.register(User, UserAdmin)
-# admin.site.unregister(Group)
+admin.site.register(Topic, TopicAdmin)

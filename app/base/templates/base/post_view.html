@@ -1,6 +1,10 @@
 {% extends 'main.html' %} {% load static %}
 <!--  -->
 
+{% block title %} {% if not post.is_published %} (Draft) {% endif %}
+{{post.title}} | Normal {% endblock title %}
+
+<!--  -->
 {% block content %}
 
 <style>
@@ -12,6 +16,7 @@
 <div class="post-parent">
     <div>
         <h1>{{post.title|safe}}</h1>
+        <a href="{% url 'user-profile' post.owner %}">@{{post.owner}}</a> <br />
         <span>{{post.likes.count}} Likes</span>
         {% if request.user.is_authenticated %} |
         <span>
@@ -21,6 +26,8 @@
             </a>
         </span>
         {% endif %}
+        <br />
+        <span>{{post.topic.name}}</span>
         <div>{{post.content.html|safe}}</div>
         <hr />
         <form action="" method="POST" enctype="multipart/form-data">

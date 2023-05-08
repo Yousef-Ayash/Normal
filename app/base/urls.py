@@ -4,7 +4,13 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
-    path("login/", LoginView.as_view(template_name='base/login.html'), name="login"),
+    path(
+        "login/",
+        LoginView.as_view(
+            template_name="base/login.html", redirect_authenticated_user=True
+        ),
+        name="login",
+    ),
     path("logout/", LogoutView.as_view(), name="logout"),
     path("register/", views.RegisterView.as_view(), name="register"),
     path("", views.HomeView.as_view(), name="home"),
@@ -24,6 +30,13 @@ urlpatterns = [
         name="delete-post",
     ),
     path("@<str:username>/post/<slug:slug>", views.PostView.as_view(), name="post"),
+    path("@<str:username>", views.UserView.as_view(), name="user-profile"),
+    path("update-profile", views.UserUpdate.as_view(), name="update-profile"),
+    path(
+        "delete-account",
+        views.DeleteProfile.as_view(),
+        name="delete-account",
+    ),
     path(
         "@<str:username>/post/<slug:slug>/like/",
         views.post_like_toggle,

@@ -1,10 +1,11 @@
 {% extends "main.html" %}
-
+<!--  -->
+{% block title %} Login to Normal {% endblock title %}
+<!--  -->
 {% block content %}
-  <h2>Login</h2>
-  <form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
+<h2>Login</h2>
+<form method="post">
+    {% csrf_token %} {{ form.as_p }}
     <button type="submit">Login</button>
-  </form>
+</form>
 {% endblock %}

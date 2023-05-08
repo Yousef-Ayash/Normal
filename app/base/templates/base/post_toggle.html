@@ -1,0 +1,7 @@
+{% if not form.instance.title %}
+<button type="submit" name="draft">Draft</button>
+<button type="submit" name="publish">Publish</button>
+{% else %}
+<button type="submit" name="draft">Draft</button>
+<button type="submit" name="publish">Save Changes</button>
+{% endif %}

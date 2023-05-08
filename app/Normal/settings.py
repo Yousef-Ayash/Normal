@@ -18,7 +18,7 @@ SECRET_KEY = os.environ.get("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG", False)
 
-ALLOWED_HOSTS = list(os.environ.get("HOSTS", ['localhost', '127.0.0.1']))
+ALLOWED_HOSTS = list(os.environ.get("HOSTS", ["localhost", "127.0.0.1"]))
 
 
 # Application definition
@@ -82,20 +82,24 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
-    },
-    {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
-    },
-] if not DEBUG else []
+AUTH_PASSWORD_VALIDATORS = (
+    [
+        {
+            "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+        },
+        {
+            "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+        },
+        {
+            "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
+        },
+        {
+            "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+        },
+    ]
+    if not DEBUG
+    else []
+)
 
 
 # Internationalization
@@ -120,7 +124,7 @@ STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 
-MEDIA_ROOT = BASE_DIR / "static/images/"
+MEDIA_ROOT = BASE_DIR / "static/images"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
@@ -136,15 +140,9 @@ QUILL_CONFIGS = {
             "toolbar": [
                 [{"size": ["small", False, "large", "huge"]}],
                 ["bold", "italic"],
-                [{"header": 1}, {"header": 2}],
+                [{"header": 2}],
                 [{"list": "ordered"}, {"list": "bullet"}],
-                [{"direction": "rtl"}],
-                [
-                    {"align": ""},
-                    {"align": "center"},
-                    {"align": "right"},
-                    {"align": "justify"},
-                ],
+                ["code"],
                 ["image", "link"],
                 ["clean"],
             ],
@@ -155,7 +153,8 @@ QUILL_CONFIGS = {
 # Session Timeout Configurations
 SESSION_EXPIRE_SECONDS = 6480000  # 75 Days
 SESSION_TIMEOUT_REDIRECT = "login/"
-LOGOUT_REDIRECT_URL = '/'
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"
 
-# # Authentication: User Model
+# Authentication: User Model
 AUTH_USER_MODEL = "base.User"

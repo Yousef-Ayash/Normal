@@ -1,7 +1,7 @@
 {% extends 'main.html' %} {% load static %}
 <!--  -->
 
-{% block title %} Delete {{post}} {% endblock title %}
+{% block title %} Delete your account in Normal 😥 {% endblock title %}
 
 <!--  -->
 {% block content %}
@@ -9,7 +9,12 @@
     <div>Delete Form</div>
     <form action="" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-        <div>Are you sure you want to delete {{post}}?</div>
+        <div>Are you sure you want to delete Your account?</div>
+        <span>
+            Type "Delete {{request.user.username}}" to confirm deletion.
+        </span>
+        <br />
+        <input name="dl-confirm" />
         <div>
             <span><a href="{{request.META.HTTP_REFERER}}">Cancel</a></span>
             <span><button type="submit">Confirm</button></span>

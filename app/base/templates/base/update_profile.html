@@ -1,0 +1,17 @@
+{% extends 'main.html' %}
+<!--  -->
+
+{% block title %} Update your profile {% endblock title %}
+
+<!--  -->
+{% block content %}
+<form action="" method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <!--  -->
+    {{form.as_p}}
+    <button type="submit">Save</button>
+</form>
+<span>
+    <a href="{% url 'delete-account' %}">Delete your account</a>
+</span>
+{% endblock content %}

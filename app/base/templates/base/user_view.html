@@ -1,0 +1,82 @@
+{% extends 'main.html' %}
+<!--  -->
+
+{% block title %} {{user.name}}'s Profile | Normal {% endblock title %}
+
+<!--  -->
+{% block content %}
+<h1>{{user.name}}'s Profile</h1>
+
+<div>
+    <h3>{{user.name}}</h3>
+    <span>@{{user.username}}</span>
+    <br />
+    <p>{{user.bio}}</p>
+
+    {% if request.user == user %}
+    <span><a href="{% url 'update-profile' %}">Update your profile</a></span>
+    <br />
+    <span><a href="{% url 'logout' %}">Log out</a></span>
+    {% endif %}
+</div>
+<hr />
+<div>
+    <h1>{{user.name}}'s Posts</h1>
+
+    {% if user == request.user %}
+    <!--  -->
+    {% if posts.count > 1 %}
+    <p>{{posts.count}} Posts</p>
+    {% elif posts.count == 1 %}
+    <p>{{posts.count}} Post</p>
+    {% endif %}
+    <!--  -->
+    {% if posts.count > 0 %}
+    <!--  -->
+    {% for post in posts %}
+    <div>
+        {% if not post.is_published %}
+        <span>(Draft)</span>
+        {% endif %}
+        <a href="{% url 'post' post.owner post.slug %}">{{post.title}}</a>
+        {% if request.user == post.owner %} |
+        <a href="{% url 'update-post' post.slug %}">Update</a> |
+        <a href="{% url 'delete-post' post.slug %}">Delete</a>
+        {% endif %}
+        <br />
+        <span>{{post.likes.count}} Likes</span> |
+        <span>{{post.topic.name}}</span>
+    </div>
+    {% endfor %}
+    <!--  -->
+    {% else %}
+    <p>{{user.name}} didn't post anything yet...</p>
+    {% endif %}
+    <!--  -->
+    {% else %}
+    <!--  -->
+    {% if posts_others.count > 1 %}
+    <p>{{posts_others.count}} Posts</p>
+    {% elif posts_others.count == 1 %}
+    <p>{{posts_others.count}} Post</p>
+    {% endif %}
+    <!--  -->
+    {% if posts_others.count > 0 %}
+    <!--  -->
+    {% for post in posts_others %}
+    <div>
+        <a href="{% url 'post' post.owner post.slug %}">{{post.title}}</a>
+        <br />
+        <span>{{post.likes.count}} Likes</span> |
+        <span>{{post.topic.name}}</span>
+    </div>
+    {% endfor %}
+    <!--  -->
+    {% else %}
+    <p>{{user.name}} didn't post anything yet...</p>
+    {% endif %}
+    <!--  -->
+    {% endif %}
+</div>
+
+{% endblock content %}

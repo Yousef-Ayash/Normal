@@ -1,37 +1,74 @@
 {% extends 'main.html' %}
 <!--  -->
 
-{% block content %}
-<div>
-    <h1>Home View!</h1>
-    <h3>Urls</h3>
-    <ul>
-        {% if request.user.is_authenticated %}
-        <li><a href="{% url 'logout' %}">Log out</a></li>
-        {% else %}
-        <li><a href="{% url 'register' %}">Register</a></li>
-        {% endif %}
-        <li><a href="{% url 'create-post' %}">Create a Post</a></li>
-    </ul>
-    <hr />
-</div>
-<div>
-    <h2>Posts!</h2>
-    <br />
+{% block title %} Normal - Share your own stories {% endblock title %}
 
-    {% for post in posts %}
+<!--  -->
+
+{% block content %}
+<style>
+    .main_thing {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+    }
+</style>
+<div class="main_thing">
     <div>
-        <span>@{{post.owner}}</span> | <span>{{post.likes.count}} Likes</span>
-        <br />
-        <a href="{% url 'post' post.owner post.slug %}">
-            {{post.id}}- {{post.title}}
-        </a>
-        {% if request.user == post.owner %} |
-        <a href="{% url 'update-post' post.slug %}">Update</a> |
-        <a href="{% url 'delete-post' post.slug %}">Delete</a>
-        {% endif %}
+        <div>
+            <h1>Home View!</h1>
+            <h3>Urls</h3>
+            <ul>
+                {% if not request.user.is_authenticated %}
+                <li><a href="{% url 'register' %}">Register</a></li>
+                <li><a href="{% url 'login' %}">Login</a></li>
+                {% endif %}
+                <li><a href="{% url 'create-post' %}">Create a Post</a></li>
+                {% if request.user.is_authenticated %}
+                <li>
+                    <a href="{% url 'user-profile' request.user %}">
+                        @{{request.user}}
+                    </a>
+                </li>
+                {% endif %}
+            </ul>
+            <hr />
+        </div>
+        <div>
+            <h2>Posts!</h2>
+            <form action="{% url 'home' %}" method="GET">
+                <input name="q" autocomplete="off" />
+            </form>
+            <hr />
+            {% for post in posts %}
+            <div>
+                <a href="{% url 'user-profile' post.owner %}">
+                    @{{post.owner.username}}
+                </a>
+                | <span>{{post.likes.count}} Likes</span> |
+                <span>{{post.topic.name}}</span>
+                <br />
+                <a href="{% url 'post' post.owner post.slug %}">
+                    {{post.id}}- {{post.title}}
+                </a>
+                {% if request.user == post.owner %} |
+                <a href="{% url 'update-post' post.slug %}">Update</a> |
+                <a href="{% url 'delete-post' post.slug %}">Delete</a>
+                {% endif %}
+            </div>
+            <hr />
+            {% endfor %}
+        </div>
     </div>
-    <hr />
-    {% endfor %}
+    <div>
+        <h2>Topics</h2>
+        <hr />
+        <ul>
+            {% for topic in topics %}
+            <li>
+                <a href="{% url 'home' %}?q={{topic.name}}"> {{topic.name}} </a>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
 </div>
 {% endblock content %}

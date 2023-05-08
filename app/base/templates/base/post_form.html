@@ -1,6 +1,17 @@
 {% extends 'main.html' %} {% load static %}
 <!--  -->
 
+{% block title %}
+    
+    {% if not form.instance.title %}
+    Share a story of your own | Normal
+    {% else %}
+    Edit {{form.instance.title}} | Normal
+    {% endif %}
+        
+{% endblock title %}
+    
+<!--  -->
 {% block content %}
 <div>
     <form action="" method="POST" enctype="multipart/form-data">
@@ -10,7 +21,7 @@
 
         <br />
         <a href="{% url 'home' %}">Go Back Home</a>
-        <button type="submit">Save</button>
+        {% include "base/post_toggle.html" %}
     </form>
 </div>
 {% endblock content %}
