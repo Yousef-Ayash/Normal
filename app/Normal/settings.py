@@ -71,10 +71,22 @@ WSGI_APPLICATION = "Normal.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
+db_name = os.environ.get("DB_NAME")
+db_username = os.environ.get("DB_USERNAME")
+db_password = os.environ.get("DB_PASSWORD")
+db_hostname = os.environ.get("DB_HOSTNAME")
+db_port = os.environ.get("DB_PORT")
+
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        # "ENGINE": "django.db.backends.sqlite3",
+        # "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": db_name,
+        "USER": db_username,
+        "PASSWORD": db_password,
+        "HOST": db_hostname,
+        "PORT": db_port,
     }
 }
 
@@ -151,7 +163,7 @@ QUILL_CONFIGS = {
 }
 
 # Session Timeout Configurations
-SESSION_EXPIRE_SECONDS = 6480000  # 75 Days
+SESSION_EXPIRE_SECONDS = float(os.environ.get("SESSION_EXPIRE_SECONDS"))
 SESSION_TIMEOUT_REDIRECT = "login/"
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"

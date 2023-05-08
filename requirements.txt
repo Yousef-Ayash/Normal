@@ -4,3 +4,4 @@ pillow
 django-session-timeout
 django-quill-editor
 cryptography
+psycopg2

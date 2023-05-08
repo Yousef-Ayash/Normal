@@ -2,6 +2,13 @@
 <button type="submit" name="draft">Draft</button>
 <button type="submit" name="publish">Publish</button>
 {% else %}
+<!--  -->
+{% if form.instance.is_published == False %}
+<button type="submit" name="draft">Save Changes</button>
+<button type="submit" name="publish">Publish</button>
+{% else %}
 <button type="submit" name="draft">Draft</button>
 <button type="submit" name="publish">Save Changes</button>
+{% endif %}
+<!--  -->
 {% endif %}

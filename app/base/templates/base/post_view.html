@@ -8,24 +8,35 @@
 {% block content %}
 
 <style>
-    .post-parent {
+    .post-parent, .post-head {
         display: grid;
         grid-template-columns: 2fr 1fr;
     }
 </style>
 <div class="post-parent">
     <div>
-        <h1>{{post.title|safe}}</h1>
-        <a href="{% url 'user-profile' post.owner %}">@{{post.owner}}</a> <br />
-        <span>{{post.likes.count}} Likes</span>
-        {% if request.user.is_authenticated %} |
-        <span>
-            <a href="{% url 'like-toggle' post.owner post.slug %}">
-                {% if request.user in post.likes.all %} UnLike {% else %} Like
+        <div class="post-head">
+            <div>
+                <h1>{{post.title|safe}}</h1>
+                <a href="{% url 'user-profile' post.owner %}">@{{post.owner}}</a> <br />
+                <span>{{post.likes.count}} Likes</span>
+                {% if request.user.is_authenticated %} |
+                <span>
+                    <a href="{% url 'like-toggle' post.owner post.slug %}">
+                        {% if request.user in post.likes.all %} UnLike {% else %} Like
+                        {% endif %}
+                    </a>
+                </span>
                 {% endif %}
-            </a>
-        </span>
-        {% endif %}
+            </div>
+
+            {% if request.user == post.owner %}
+            <div>
+                <a href="{% url 'update-post' post.slug %}">Update</a> |
+                <a href="{% url 'delete-post' post.slug %}">Delete</a>
+            </div>
+            {% endif %}
+        </div>
         <br />
         <span>{{post.topic.name}}</span>
         <div>{{post.content.html|safe}}</div>
