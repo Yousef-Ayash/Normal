@@ -3,7 +3,7 @@ import os
 from django.core.management.base import BaseCommand
 from dotenv import load_dotenv
 
-from ....base.models import User
+from base.models import User
 
 load_dotenv()
 
