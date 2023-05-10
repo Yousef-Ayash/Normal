@@ -1,18 +1,18 @@
 {% extends 'main.html' %} {% load static %}
 <!--  -->
-
 {% block title %} Delete {{post}} {% endblock title %}
-
 <!--  -->
 {% block content %}
-<div>
-    <div>Delete Form</div>
+<div class="delete-wrapper">
+    <div class="dl-header"><span>Delete Your Post</span></div>
     <form action="" method="POST" enctype="multipart/form-data">
         {% csrf_token %}
-        <div>Are you sure you want to delete {{post}}?</div>
-        <div>
-            <span><a href="{{request.META.HTTP_REFERER}}">Cancel</a></span>
-            <span><button type="submit">Confirm</button></span>
+        <p class="dl-body">Are you sure you want to delete "{{post}}"?</p>
+        <div class="dl-btns">
+            <a href="{{request.META.HTTP_REFERER}}" class="btn-cancel">
+                Cancel
+            </a>
+            <button type="submit" class="btn">Confirm</button>
         </div>
     </form>
 </div>

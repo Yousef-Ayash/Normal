@@ -1,74 +1,66 @@
-{% extends 'main.html' %}
+{% extends 'main.html' %} {% load static %}
 <!--  -->
-
 {% block title %} Normal - Share your own stories {% endblock title %}
-
 <!--  -->
-
 {% block content %}
-<style>
-    .main_thing {
-        display: grid;
-        grid-template-columns: 2fr 1fr;
-    }
-</style>
-<div class="main_thing">
-    <div>
-        <div>
-            <h1>Home View!</h1>
-            <h3>Urls</h3>
-            <ul>
-                {% if not request.user.is_authenticated %}
-                <li><a href="{% url 'register' %}">Register</a></li>
-                <li><a href="{% url 'login' %}">Login</a></li>
-                {% endif %}
-                <li><a href="{% url 'create-post' %}">Create a Post</a></li>
-                {% if request.user.is_authenticated %}
-                <li>
-                    <a href="{% url 'user-profile' request.user %}">
-                        @{{request.user}}
+<div class="content-feed-container">
+    <div class="actions">
+        <a href="{% url 'create-post' %}" class="btn">Write a post</a>
+        <button class="btn" id="m_topic_btn">Normal's Topics</button>
+    </div>
+    <div class="posts-container">
+        {% if posts.count > 0 %} {% for post in posts %}
+        <div class="post-container">
+            <div class="post-upper">
+                <span class="img-circle">
+                    <img src="{% static post.owner.avatar.url %}" />
+                </span>
+                <span class="post-author">
+                    <a
+                        href="{% url 'user-profile' post.owner %}"
+                        class="username-link"
+                    >
+                        {{post.owner.name}}
                     </a>
-                </li>
-                {% endif %}
-            </ul>
-            <hr />
-        </div>
-        <div>
-            <h2>Posts!</h2>
-            <form action="{% url 'home' %}" method="GET">
-                <input name="q" autocomplete="off" />
-            </form>
-            <hr />
-            {% for post in posts %}
-            <div>
-                <a href="{% url 'user-profile' post.owner %}">
-                    @{{post.owner.username}}
-                </a>
-                | <span>{{post.likes.count}} Likes</span> |
-                <span>{{post.topic.name}}</span>
-                <br />
-                <a href="{% url 'post' post.owner post.slug %}">
-                    {{post.id}}- {{post.title}}
-                </a>
-                {% if request.user == post.owner %} |
-                <a href="{% url 'update-post' post.slug %}">Update</a> |
-                <a href="{% url 'delete-post' post.slug %}">Delete</a>
-                {% endif %}
+                </span>
             </div>
-            <hr />
-            {% endfor %}
+            <div class="post-lower">
+                <span class="post-title">
+                    <a href="{% url 'post' post.owner post.slug %}">
+                        {{post.title}}
+                    </a>
+                </span>
+                <div class="post-footer">
+                    {% if post.topic %}
+                    <span class="post-topics">
+                        <a href="{% url 'home' %}?q={{post.topic.name}}">
+                            {{post.topic.name}}
+                        </a>
+                    </span>
+                    {% endif %}
+
+                    <div class="post-info">
+                        <span class="post-date">
+                            {{post.created_at|timesince}}
+                        </span>
+                        <div class="post-likes-comments">
+                            <span> {{post.likes.count}} Likes </span>
+                            |
+                            <span> {{post.comment__count}} Comments </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
+        {% endfor %} {% else %}
+        <div class="empty-posts">
+            <span>It's empty!😱</span>
+        </div>
+        {% endif %}
     </div>
-    <div>
-        <h2>Topics</h2>
-        <hr />
-        <ul>
-            {% for topic in topics %}
-            <li>
-                <a href="{% url 'home' %}?q={{topic.name}}"> {{topic.name}} </a>
-            </li>
-            {% endfor %}
-        </ul>
-    </div>
+</div>
+
+<div class="content-topics-wrapper" id="m_topics_wrapper">
+    {% include 'base/topics_component.html' %}
 </div>
 {% endblock content %}

@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 
+import dj_database_url
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -13,7 +14,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = os.environ.get("SECRET_KEY", "CVogd0iNHeqaWBgmzy0SSIFKPg")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get("DEBUG", False)
@@ -36,6 +37,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django_session_timeout.middleware.SessionTimeoutMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -78,16 +80,7 @@ db_hostname = os.environ.get("DB_HOSTNAME")
 db_port = os.environ.get("DB_PORT")
 
 DATABASES = {
-    "default": {
-        # "ENGINE": "django.db.backends.sqlite3",
-        # "NAME": BASE_DIR / "db.sqlite3",
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": db_name,
-        "USER": db_username,
-        "PASSWORD": db_password,
-        "HOST": db_hostname,
-        "PORT": db_port,
-    }
+    "default": dj_database_url.parse(os.environ.get("DATABASE_URL"), conn_max_age=600)
 }
 
 
@@ -170,3 +163,5 @@ LOGOUT_REDIRECT_URL = "/"
 
 # Authentication: User Model
 AUTH_USER_MODEL = "base.User"
+
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"

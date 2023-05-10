@@ -1,14 +1,14 @@
 {% if not form.instance.title %}
-<button type="submit" name="draft">Draft</button>
-<button type="submit" name="publish">Publish</button>
+<button type="submit" name="draft" class="np-draft">Save as a draft</button>
+<button type="submit" name="publish" class="np-publish">Publish</button>
 {% else %}
 <!--  -->
 {% if form.instance.is_published == False %}
-<button type="submit" name="draft">Save Changes</button>
-<button type="submit" name="publish">Publish</button>
+<button type="submit" name="draft" class="np-draft">Save Changes</button>
+<button type="submit" name="publish" class="np-publish">Publish</button>
 {% else %}
-<button type="submit" name="draft">Draft</button>
-<button type="submit" name="publish">Save Changes</button>
+<button type="submit" name="draft" class="np-draft">Draft</button>
+<button type="submit" name="publish" class="np-publish">Save Changes</button>
 {% endif %}
 <!--  -->
 {% endif %}

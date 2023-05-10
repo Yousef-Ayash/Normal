@@ -1,7 +1,7 @@
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
-from django.db.models import Q
+from django.db.models import Count, Q
 from django.shortcuts import redirect, render
 from django.utils.decorators import method_decorator
 from django.views.generic import FormView, TemplateView
@@ -24,12 +24,17 @@ class HomeView(TemplateView):
     def get(self, request):
         q = request.GET.get("q") if request.GET.get("q") != None else ""
 
-        posts = Post.objects.filter(
-            Q(owner__name__icontains=q)
-            | Q(owner__username__icontains=q)
-            | Q(topic__name__exact=q)
-            | Q(title__icontains=q)
-        ).filter(is_published=True)
+        posts = (
+            Post.objects.filter(
+                Q(owner__name__icontains=q)
+                | Q(owner__username__icontains=q)
+                | Q(topic__name__exact=q)
+                | Q(title__icontains=q)
+            )
+            .filter(is_published=True)
+            .annotate(Count("comment"))
+            .order_by("-created_at")
+        )
 
         topics = Topic.objects.all()
 
@@ -42,8 +47,9 @@ class HomeView(TemplateView):
 class CreatePostView(TemplateView):
     def get(self, request):
         form = PostForm()
+        topics = Topic.objects.all()
 
-        context = {"form": form}
+        context = {"form": form, "topics": topics}
         return render(request, "base/post_form.html", context)
 
     def post(self, request):
@@ -121,7 +127,7 @@ class PostView(TemplateView):
         if request.user != post.owner and post.is_published == False:
             raise PermissionDenied
 
-        context = {"post": post, "form": comment_form, "comments": comments}
+        context = {"post": post, "c_form": comment_form, "comments": comments}
         return render(request, "base/post_view.html", context)
 
     def post(self, request, username=None, slug=None):
@@ -139,13 +145,31 @@ class PostView(TemplateView):
 
 class UserView(TemplateView):
     def get(self, request, username=None):
+        q = request.GET.get("q") if request.GET.get("q") != None else ""
         user = User.objects.get(username=username)
 
-        posts = Post.objects.filter(owner__username=username).all()
+        posts = (
+            Post.objects.filter(owner__username=username)
+            .filter(
+                Q(owner__name__icontains=q)
+                | Q(owner__username__icontains=q)
+                | Q(topic__name__exact=q)
+                | Q(title__icontains=q)
+            )
+            .annotate(comments_count=Count("comment"))
+            .order_by("-created_at")
+        )
         posts_others = (
             Post.objects.filter(owner__username=username)
+            .filter(
+                Q(owner__name__icontains=q)
+                | Q(owner__username__icontains=q)
+                | Q(topic__name__exact=q)
+                | Q(title__icontains=q)
+            )
+            .annotate(comments_count=Count("comment"))
             .filter(is_published=True)
-            .all()
+            .order_by("-created_at")
         )
 
         context = {"user": user, "posts": posts, "posts_others": posts_others}
@@ -183,7 +207,7 @@ class DeleteProfile(TemplateView):
         user = request.user
         dl_c = request.POST.get("dl-confirm")
 
-        if dl_c == f"Delete {request.user.username}":
+        if dl_c == f"Delete @{request.user.username}":
             user.delete()
             return redirect("home")
         else:

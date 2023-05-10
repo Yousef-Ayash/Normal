@@ -1,0 +1,31 @@
+<div class="content-topics-container">
+    <span id="m_topic_close">
+        <svg
+            id="Layer_1"
+            data-name="Layer 1"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 24.6 24.6"
+        >
+            <defs>
+                <style>
+                    .cls-1 {
+                        fill: none;
+                        stroke: #000;
+                        stroke-miterlimit: 10;
+                        stroke-width: 6.5px;
+                    }
+                </style>
+            </defs>
+            <line class="cls-1" x1="2.3" y1="22.3" x2="22.3" y2="2.3" />
+            <line class="cls-1" x1="22.3" y1="22.3" x2="2.3" y2="2.3" />
+        </svg>
+    </span>
+    <div class="blogs-topics-title">Discover more of matters to you</div>
+    <div class="topics-items">
+        {% for topic in topics %}
+        <div class="btn topics-item">
+            <a href="{% url 'home' %}?q={{topic.name}}">{{topic.name}}</a>
+        </div>
+        {% endfor %}
+    </div>
+</div>

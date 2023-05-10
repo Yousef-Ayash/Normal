@@ -52,7 +52,7 @@ class Post(models.Model):
     topic = models.ForeignKey(Topic, on_delete=models.SET_NULL, null=True, blank=True)
     is_published = models.BooleanField(null=False, default=True)
     likes = models.ManyToManyField(User, related_name="post_likes", blank=True)
-    updated_at = models.DateTimeField(auto_now=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -86,6 +86,9 @@ class Comment(models.Model):
 
     def __str__(self):
         return f"{self.post.title} - {self.content[:16]}"
+
+    class Meta:
+        ordering = ["-created_at"]
 
 
 @receiver(pre_save, sender=User)

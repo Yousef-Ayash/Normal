@@ -1,0 +1,16 @@
+{% load static %}
+<div class="side-welcome-wrapper">
+    <div class="welcome-logo">
+        <a href="{% url 'home' %}">
+            <img
+                class="logo"
+                src="{% static 'images/icons/Normal.svg'%}"
+                alt="Normal's Logo"
+            />
+        </a>
+    </div>
+    <div class="welcome-txt">
+        <span>Welcome To Normal!</span>
+        <span>A place to share your own stories.</span>
+    </div>
+</div>

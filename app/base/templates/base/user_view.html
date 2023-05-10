@@ -1,82 +1,173 @@
-{% extends 'main.html' %}
+{% extends 'main.html' %} {% load static %}
 <!--  -->
 
 {% block title %} {{user.name}}'s Profile | Normal {% endblock title %}
 
 <!--  -->
 {% block content %}
-<h1>{{user.name}}'s Profile</h1>
-
-<div>
-    <h3>{{user.name}}</h3>
-    <span>@{{user.username}}</span>
-    <br />
-    <p>{{user.bio}}</p>
-
-    {% if request.user == user %}
-    <span><a href="{% url 'update-profile' %}">Update your profile</a></span>
-    <br />
-    <span><a href="{% url 'logout' %}">Log out</a></span>
-    {% endif %}
-</div>
-<hr />
-<div>
-    <h1>{{user.name}}'s Posts</h1>
-
-    {% if user == request.user %}
-    <!--  -->
-    {% if posts.count > 1 %}
-    <p>{{posts.count}} Posts</p>
-    {% elif posts.count == 1 %}
-    <p>{{posts.count}} Post</p>
-    {% endif %}
-    <!--  -->
-    {% if posts.count > 0 %}
-    <!--  -->
-    {% for post in posts %}
-    <div>
-        {% if not post.is_published %}
-        <span>(Draft)</span>
-        {% endif %}
-        <a href="{% url 'post' post.owner post.slug %}">{{post.title}}</a>
-        {% if request.user == post.owner %} |
-        <a href="{% url 'update-post' post.slug %}">Update</a> |
-        <a href="{% url 'delete-post' post.slug %}">Delete</a>
-        {% endif %}
-        <br />
-        <span>{{post.likes.count}} Likes</span> |
-        <span>{{post.topic.name}}</span>
+<div class="profile-container">
+    <div class="actions">
+        <a href="{% url 'create-post' %}" class="btn">Write a post</a>
     </div>
-    {% endfor %}
-    <!--  -->
-    {% else %}
-    <p>{{user.name}} didn't post anything yet...</p>
-    {% endif %}
-    <!--  -->
-    {% else %}
-    <!--  -->
-    {% if posts_others.count > 1 %}
-    <p>{{posts_others.count}} Posts</p>
-    {% elif posts_others.count == 1 %}
-    <p>{{posts_others.count}} Post</p>
-    {% endif %}
-    <!--  -->
-    {% if posts_others.count > 0 %}
-    <!--  -->
-    {% for post in posts_others %}
-    <div>
-        <a href="{% url 'post' post.owner post.slug %}">{{post.title}}</a>
-        <br />
-        <span>{{post.likes.count}} Likes</span> |
-        <span>{{post.topic.name}}</span>
+    <!-- Profile info -->
+    <div class="profile-info-wrapper">
+        <div class="profile-upper">
+            {% if request.user == user %}
+            <div class="profile-cog-wrapper">
+                <a href="{% url 'update-profile' %}">
+                    <img
+                    src="{% static 'images/icons/cog.svg' %}"
+                    class="profile-cog"
+                    />
+                </a>
+                <a href="{% url 'logout' %}">
+                    <img
+                    src="{% static 'images/icons/logout.svg' %}"
+                    class="profile-cog"
+                    />
+                </a>
+            </div>
+            {% endif %}
+            <div class="profile-img-wrapper">
+                <img src="{% static user.avatar.url %}" class="profile-img" />
+            </div>
+        </div>
+        <div class="profile-body">
+            <div class="profile-user-wrapper">
+                <p class="profile-name">{{user.name}}</p>
+                <p class="profile-username">@{{user.username}}</p>
+            </div>
+            <div class="profile-bio">
+                <span>Bio</span>
+                {% if user.bio %}
+                <p class="bio-body">{{user.bio}}</p>
+                {% else %}
+                <p>There is no bio.</p>
+                {% endif %}
+            </div>
+        </div>
     </div>
-    {% endfor %}
-    <!--  -->
-    {% else %}
-    <p>{{user.name}} didn't post anything yet...</p>
-    {% endif %}
-    <!--  -->
-    {% endif %}
-</div>
 
+    <!-- Profile Posts -->
+    <div class="profile-posts-wrapper">
+        {% if user == request.user %}
+            <div class="profile-posts-header">
+                <span> {{user.name}}'s Posts: </span>
+
+                <!--  -->
+                {% if posts.count > 1 %}
+                <span> {{posts.count}} Posts</span>
+                {% elif posts.count == 1 %}
+                <span> {{posts.count}} Post</span>
+                {% endif %}
+                <!--  -->
+            </div>
+            {% if posts.count > 0 %}
+            <div class="posts-container">
+                {% for post in posts %}
+                <div class="post-container">
+                    <div class="post-lower">
+                        <span class="post-title">
+                            <a href="{% url 'post' user post.slug %}">
+                                {{post.title}}
+                            </a>
+                            
+                            {% if not post.is_published %}
+                                <span>(Draft)</span>
+                            {% endif %}
+                                
+                        </span>
+                        <div class="post-footer">
+                            {% if post.topic %}
+                            <span class="post-topics">
+                                <a
+                                    href="{% url 'user-profile' user %}?q={{post.topic.name}}"
+                                >
+                                    {{post.topic.name}}
+                                </a>
+                            </span>
+                            {% endif %}
+                            <div class="post-info">
+                                <span class="post-date">
+                                    {{post.created_at|timesince}}
+                                </span>
+                                <div class="post-likes-comments">
+                                    <span> {{post.likes.count}} Likes </span>
+                                    |
+                                    <span>
+                                        {{post.comments_count}} Comments
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <!-- Empty -->
+            <div class="empty-posts">
+                <span>{{user.name}} didn't post anything yet...</span>
+            </div>
+            {% endif %}
+            <!--  -->
+            {% else %}
+            <!--  -->
+            <div class="profile-posts-header">
+                <span> {{user.name}}'s Posts: </span>
+                {% if posts_others.count > 1 %}
+                <span> {{posts_others.count}} Posts</span>
+                {% elif posts_others.count == 1 %}
+                <span> {{posts_others.count}} Post</span>
+                {% endif %}
+            </div>
+            <!--  -->
+            {% if posts_others.count > 0 %}
+            <div class="posts-container">
+                {% for post in posts_others %}
+                <div class="post-container">
+                    <div class="post-lower">
+                        <span class="post-title">
+                            <a href="{% url 'post' user post.slug %}">
+                                {{post.title}}
+                            </a>
+                        </span>
+                        <div class="post-footer">
+                            {% if post.topic %}
+                            <span class="post-topics">
+                                <a
+                                    href="{% url 'user-profile' user %}?q={{post.topic.name}}"
+                                >
+                                    {{post.topic.name}}
+                                </a>
+                            </span>
+                            {% endif %}
+                            <div class="post-info">
+                                <span class="post-date">
+                                    {{post.created_at|timesince}}
+                                </span>
+                                <div class="post-likes-comments">
+                                    <span> {{post.likes.count}} Likes </span>
+                                    |
+                                    <span>
+                                        {{post.comments_count}} Comments
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <!-- Empty -->
+            <div class="empty-posts">
+                <span>{{user.name}} didn't post anything yet...</span>
+            </div>
+            {% endif %}
+            <!--  -->
+            {% endif %}
+        </div>
+    </div>
+</div>
 {% endblock content %}
