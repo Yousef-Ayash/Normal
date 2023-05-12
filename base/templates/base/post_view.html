@@ -26,6 +26,7 @@
                     </a>
                 </span>
             </div>
+            {% if request.user == post.owner %}
             <div class="post-actions">
                 <a href="{% url 'delete-post' post.slug %}" class="btn-cancel">
                     Delete
@@ -34,6 +35,7 @@
                     Edit
                 </a>
             </div>
+            {% endif %}
         </div>
         <h1 class="post-title">{{post.title}}</h1>
         <div>

@@ -17,7 +17,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY", "CVogd0iNHeqaWBgmzy0SSIFKPg")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG", False)
+DEBUG = os.environ.get("DEBUG", "False")
 
 ALLOWED_HOSTS = list(os.environ.get("HOSTS", ["localhost", "127.0.0.1"]))
 
@@ -73,16 +73,9 @@ WSGI_APPLICATION = "Normal.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-db_name = os.environ.get("DB_NAME")
-db_username = os.environ.get("DB_USERNAME")
-db_password = os.environ.get("DB_PASSWORD")
-db_hostname = os.environ.get("DB_HOSTNAME")
-db_port = os.environ.get("DB_PORT")
-
 DATABASES = {
     "default": dj_database_url.parse(os.environ.get("DATABASE_URL"), conn_max_age=600)
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -121,15 +114,16 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
-STATIC_ROOT = BASE_DIR.parent / "static"
+
+STATIC_ROOT = BASE_DIR / "staticfiles"
 STATIC_URL = "static/"
-MEDIA_URL = "/images/"
 
 STATICFILES_DIRS = [
     BASE_DIR / "static",
 ]
 
-MEDIA_ROOT = BASE_DIR / "static/images"
+MEDIA_ROOT = BASE_DIR / "staticfiles/images"
+MEDIA_URL = "/images/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field

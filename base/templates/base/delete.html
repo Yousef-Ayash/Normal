@@ -9,7 +9,7 @@
         {% csrf_token %}
         <p class="dl-body">Are you sure you want to delete "{{post}}"?</p>
         <div class="dl-btns">
-            <a href="{{request.META.HTTP_REFERER}}" class="btn-cancel">
+            <a href="{% url 'post' post.owner post.slug %}" class="btn-cancel">
                 Cancel
             </a>
             <button type="submit" class="btn">Confirm</button>

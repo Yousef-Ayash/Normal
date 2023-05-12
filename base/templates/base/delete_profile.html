@@ -20,7 +20,7 @@
             </div>
         </div>
         <div class="dl-btns">
-            <a href="{{request.META.HTTP_REFERER}}" class="btn-cancel"
+            <a href="{% url 'delete-account' request.user %}" class="btn-cancel"
                 >Cancel</a
             >
             <button type="submit" class="btn">Confirm</button>
@@ -28,22 +28,3 @@
     </form>
 </div>
 {% endblock content %}
-<!--  -->
-{% comment %}
-<div>
-    <div>Delete Form</div>
-    <form action="" method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        <div>Are you sure you want to delete Your account?</div>
-        <span>
-            Type "Delete {{request.user.username}}" to confirm deletion.
-        </span>
-        <br />
-        <input name="dl-confirm" />
-        <div>
-            <span><a href="{{request.META.HTTP_REFERER}}">Cancel</a></span>
-            <span><button type="submit">Confirm</button></span>
-        </div>
-    </form>
-</div>
-{% endcomment %}

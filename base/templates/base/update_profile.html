@@ -30,7 +30,10 @@
                     <div class="user-input">{{form.bio}}</div>
                 </div>
                 <div class="pe-btns">
-                    <a href="{{request.META.HTTP_REFERER}}" class="btn-cancel">
+                    <a
+                        href="{% url 'user-profile' request.user %}"
+                        class="btn-cancel"
+                    >
                         Cancel
                     </a>
                     <button type="submit" class="btn">Save Changes</button>

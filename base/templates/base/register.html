@@ -18,18 +18,6 @@
                 {% if form.password2.errors %}
                 <li>{{form.password2.errors.as_text|cut:"* "|cut:"__all__"|cut:"password2"|cut:"username"}}</li>
                 {% endif %}
-                        
-                <!--  -->
-                {% comment %}
-                <!--  -->
-                {% for err in form %}
-                <li>
-                    {{err.errors.as_text|cut:"*
-                    "|cut:"__all__"|cut:"password2"|cut:"username"}}
-                </li>
-                {% endfor %}
-                <!--  -->
-                {% endcomment %}
             </div>
             {% endif %}
 

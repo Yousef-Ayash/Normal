@@ -154,6 +154,7 @@ img {
 
 .header-container .nav-user img {
     width: 40px;
+    height: 40px;
     border-radius: 50%;
 }
 /* ! End */
@@ -241,6 +242,7 @@ img {
 
 .img-circle img {
     width: 100%;
+    height: 100%;
     border-radius: 50%;
     object-fit: cover;
 }
@@ -595,6 +597,7 @@ img {
 
 .post-head-info .post-author-img img {
     width: 35px;
+    height: 35px;
     border-radius: 50%;
 }
 
@@ -1036,6 +1039,7 @@ img {
 .profile-img-wrapper .profile-img {
     border-radius: 50%;
     width: 100%;
+    height: 172px;
 }
 
 .profile-cog-wrapper {
@@ -1125,7 +1129,7 @@ img {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 25%;
+    padding: 20%;
     width: 100%;
 }
 
@@ -1563,6 +1567,7 @@ img {
 
     .header-container .nav-user img {
         width: 60px;
+        height: 60px;
     }
 
     .header-container .nav-user a {
@@ -1840,6 +1845,7 @@ img {
 
     .post-head-info .post-author-img img {
         width: 55px;
+        height: 55px;
     }
 
     .post-head-info .post-author {
@@ -2080,6 +2086,7 @@ img {
 
     .header-container .nav-user img {
         width: 45px;
+        height: 45px;
     }
 
     .header-container .nav-user a {
