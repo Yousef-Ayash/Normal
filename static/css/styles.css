@@ -967,7 +967,7 @@ img {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    width: 35%;
+    width: 40%;
 }
 
 .np-btns-wrapper div button {
@@ -986,10 +986,7 @@ img {
     border: none;
 }
 
-.np-publish {
-    width: 100px;
-}
-
+.np-publish,
 .np-draft {
     width: 150px;
 }
@@ -1056,6 +1053,7 @@ img {
 
 .profile-cog {
     width: 25px;
+    height: 25px;
 }
 
 .profile-body {
