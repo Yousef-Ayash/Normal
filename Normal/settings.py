@@ -17,7 +17,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get("SECRET_KEY", "CVogd0iNHeqaWBgmzy0SSIFKPg")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DEBUG", "False")
+DEBUG = str(os.environ.get("DEBUG", "1")) == "1"
 
 ALLOWED_HOSTS = list(os.environ.get("HOSTS", ["localhost", "127.0.0.1"]))
 
@@ -74,9 +74,13 @@ WSGI_APPLICATION = "Normal.wsgi.application"
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
 DATABASES = {
-    "default": dj_database_url.parse(os.environ.get("DATABASE_URL"), conn_max_age=600)
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": BASE_DIR / "db.sqlite3",
+    }
+    if DEBUG
+    else dj_database_url.parse(os.environ.get("DATABASE_URL"), conn_max_age=600)
 }
-
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 
@@ -150,7 +154,11 @@ QUILL_CONFIGS = {
 }
 
 # Session Timeout Configurations
-SESSION_EXPIRE_SECONDS = float(os.environ.get("SESSION_EXPIRE_SECONDS"))
+SESSION_EXPIRE_SECONDS = (
+    float(os.environ.get("SESSION_EXPIRE_SECONDS"))
+    if DEBUG == False
+    else 2592000  # 30 Days
+)
 SESSION_TIMEOUT_REDIRECT = "login/"
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
