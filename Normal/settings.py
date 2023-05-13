@@ -19,7 +19,9 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "CVogd0iNHeqaWBgmzy0SSIFKPg")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = str(os.environ.get("DEBUG", "1")) == "1"
 
-ALLOWED_HOSTS = list(os.environ.get("HOSTS", ["localhost", "127.0.0.1"]))
+ALLOWED_HOSTS = (
+    os.environ.get("HOSTS", "127.0.0.1 localhost").split(" ") if not DEBUG else []
+)
 
 
 # Application definition
@@ -155,8 +157,8 @@ QUILL_CONFIGS = {
 
 # Session Timeout Configurations
 SESSION_EXPIRE_SECONDS = (
-    float(os.environ.get("SESSION_EXPIRE_SECONDS"))
-    if DEBUG == False
+    float(os.environ.get("SESSION_EXPIRE_SECONDS", 2592000))
+    if not DEBUG
     else 2592000  # 30 Days
 )
 SESSION_TIMEOUT_REDIRECT = "login/"
