@@ -1,5 +1,4 @@
 {% extends 'main.html' %} {% load static %}
-<!--  -->
 
 {% block quill %}
 <!-- Quill Things -->
@@ -30,7 +29,6 @@
 <script src="/static/django_quill/django_quill.js"></script>
 <!-- Quill Things End -->
 {% endblock quill %}
-<!--  -->
 
 {% block title %}
     {% if not form.instance.title %}
@@ -39,7 +37,6 @@
         Edit {{form.instance.title}} | Normal
     {% endif %}
 {% endblock title %}
-<!--  -->
 
 {% block content %}
 <div class="new-post-container">
@@ -57,7 +54,6 @@
         </div>
         <div class="np-btns-wrapper">
             {% url 'login' as login %}
-            <!--  -->
             {% if login in request.META.HTTP_REFERER %}
             <a href="{% url 'home' %}" class="btn-cancel"> Cancel </a>
             {% else %}

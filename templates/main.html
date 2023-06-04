@@ -7,21 +7,21 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>{% block title %} {% endblock title %}</title>
         <link rel="stylesheet" href="{% static 'css/styles.css' %}" />
-
+        <link rel="shortcut icon" href="{% static 'images/icons/favicon.png' %}" type="image/png" sizes="16x16">
         {% block quill %} {% endblock quill %}
     </head>
     <body>
         {% url 'login' as login %} {% url 'register' as register %}
-        <!--  -->
-        {% if not login in request.path and not register in request.path %}
-        <!--  -->
-        {% include 'navbar.html' %}
 
-        <main class="main-container">
-            {% block content %} {% endblock content %}
-        </main>
+        {% if not login in request.path and not register in request.path %}
+
+            {% include 'navbar.html' %}
+
+            <main class="main-container">
+                {% block content %} {% endblock content %}
+            </main>
         {% endif %}
-        <!--  -->
+
         {% block log_reg %} {% endblock log_reg %}
 
         <script src="{% static 'js/main.js' %}"></script>

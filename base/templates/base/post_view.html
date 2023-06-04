@@ -1,10 +1,8 @@
 {% extends 'main.html' %} {% load static %}
-<!--  -->
 
 {% block title %} {% if not post.is_published %} (Draft) {% endif %}
 {{post.title}} | Normal {% endblock title %}
 
-<!--  -->
 {% block content %}
 <div class="post-main">
     <div class="actions">
@@ -44,16 +42,12 @@
             <span class="like-btn liked">
             {% else %}
             <span class="like-btn">
-            <!--  -->
             {% endif %}
                 {% if not request.user.is_authenticated %}
                 <a href="{% url 'login' %}">
-                <!--  -->
                 {% else %}
                 <a href="{% url 'like-toggle' post.owner post.slug %}">
-                <!--  -->
                 {% endif %}
-                <!--  -->
                 {% if not request.user in post.likes.all %}
                     <svg
                         xmlns="http://www.w3.org/2000/svg"

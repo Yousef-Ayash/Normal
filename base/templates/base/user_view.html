@@ -1,9 +1,7 @@
 {% extends 'main.html' %} {% load static %}
-<!--  -->
 
 {% block title %} {{user.name}}'s Profile | Normal {% endblock title %}
 
-<!--  -->
 {% block content %}
 <div class="profile-container">
     <div class="actions">
@@ -58,14 +56,11 @@
         {% if user == request.user %}
             <div class="profile-posts-header">
                 <span> {{user.name}}'s Posts: </span>
-
-                <!--  -->
                 {% if posts.count > 1 %}
                 <span> {{posts.count}} Posts</span>
                 {% elif posts.count == 1 %}
                 <span> {{posts.count}} Post</span>
                 {% endif %}
-                <!--  -->
             </div>
             {% if posts.count > 0 %}
             <div class="posts-container">
@@ -115,9 +110,7 @@
                 <span>{{user.name}} didn't post anything yet...</span>
             </div>
             {% endif %}
-            <!--  -->
             {% else %}
-            <!--  -->
             <div class="profile-posts-header">
                 <span> {{user.name}}'s Posts: </span>
                 {% if posts_others.count > 1 %}
@@ -126,7 +119,6 @@
                 <span> {{posts_others.count}} Post</span>
                 {% endif %}
             </div>
-            <!--  -->
             {% if posts_others.count > 0 %}
             <div class="posts-container">
                 {% for post in posts_others %}
@@ -170,7 +162,6 @@
                 <span>{{user.name}} didn't post anything yet...</span>
             </div>
             {% endif %}
-            <!--  -->
             {% endif %}
         </div>
     </div>

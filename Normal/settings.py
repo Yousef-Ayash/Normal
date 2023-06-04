@@ -19,10 +19,6 @@ SECRET_KEY = os.environ.get("SECRET_KEY", "CVogd0iNHeqaWBgmzy0SSIFKPg")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = str(os.environ.get("DEBUG", "1")) == "1"
 
-# ALLOWED_HOSTS = (
-#     os.environ.get("HOSTS", "127.0.0.1 localhost").split(" ") if not DEBUG else []
-# )
-
 ALLOWED_HOSTS = (
     list(os.environ.get("HOSTS", "127.0.0.1 localhost").split(" ")) if not DEBUG else []
 )
@@ -31,9 +27,6 @@ RENDER_EXTERNAL_HOSTNAME = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
 if RENDER_EXTERNAL_HOSTNAME:
     ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
 
-print("\n\n")
-print(f"ALLOWED HOSTS: {ALLOWED_HOSTS}")
-print("\n\n")
 
 # Application definition
 
@@ -43,6 +36,7 @@ INSTALLED_APPS = [
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
+    "whitenoise.runserver_nostatic",
     "django.contrib.staticfiles",
     "base",
     "django_quill",
@@ -51,6 +45,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django_session_timeout.middleware.SessionTimeoutMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -132,7 +127,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
 
 STATICFILES_DIRS = [
     BASE_DIR / "static",
@@ -177,3 +172,6 @@ LOGOUT_REDIRECT_URL = "/"
 
 # Authentication: User Model
 AUTH_USER_MODEL = "base.User"
+
+# WhiteNoise storage
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"

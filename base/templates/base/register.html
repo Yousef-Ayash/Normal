@@ -1,7 +1,7 @@
 {% extends 'main.html' %}
-<!--  -->
+
 {% block title %} Signup to Normal {% endblock title %}
-<!--  -->
+
 {% block log_reg %}
 <div class="main-login-register">
     <div class="log-register-wrapper">
@@ -14,7 +14,7 @@
                 {% if form.username.errors %}
                 <li>{{form.username.errors.as_text|cut:"* "|cut:"__all__"|cut:"password2"|cut:"username"}}</li>
                 {% endif %}
-                <!--  -->
+
                 {% if form.password2.errors %}
                 <li>{{form.password2.errors.as_text|cut:"* "|cut:"__all__"|cut:"password2"|cut:"username"}}</li>
                 {% endif %}
