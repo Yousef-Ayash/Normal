@@ -65,7 +65,7 @@ The steps above are to clone the repo and use `Normal` in **`Debug`** mode, now 
 
     # Change the values inside the <> according to what you have in your machine
     # that if you have postgresql in your machine.
-    # if not, just don't type it and just use the sqlite db.
+    # if not, just delete lines 88~89 and just use the sqlite db.
     DATABASE_URL=postgres://<db_username>:<db_password>@<db_hostname>:<db_port>/<db_name>
     ```
 
@@ -76,7 +76,7 @@ The steps above are to clone the repo and use `Normal` in **`Debug`** mode, now 
         ```
     2. GUnicorn:
         ```
-        # If you are running in a windows machine, use the 3th option.
+        # If you are running in a windows machine, use the 3rd option.
         gunicorn Normal.wsgi:application
         ```
         > You installed `gunicorn` when you ran `pip install -r requirements.txt`
