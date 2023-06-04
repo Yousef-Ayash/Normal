@@ -27,6 +27,10 @@ ALLOWED_HOSTS = (
     list(os.environ.get("HOSTS", "127.0.0.1 localhost").split(" ")) if not DEBUG else []
 )
 
+RENDER_EXTERNAL_HOSTNAME = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+
 print("\n\n")
 print(f"ALLOWED HOSTS: {ALLOWED_HOSTS}")
 print("\n\n")
