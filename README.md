@@ -96,7 +96,7 @@ You have all the rights to clone, tweak, change, deploy and study this repo to y
 
 ## Final notes
 
--   [Normal](https://normal-kjbk.onrender.com/) is live if you want to try it out without cloning it and do all the above things.
+-   [Normal](https://normal-t03v.onrender.com) is live if you want to try it out without cloning it and do all the above things.
     that is if you tried it before **_8/8/2023_**.
 -   If you want to connect with me... this is my [LinkedIn Profile](https://www.linkedin.com/in/yousefayash65/).
 -   If you have any feedback or issues for the project, I hope to hear them out. Thank You!😃
