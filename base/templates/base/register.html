@@ -1,0 +1,41 @@
+{% extends 'main.html' %}
+
+{% block title %} Signup to Normal {% endblock title %}
+
+{% block log_reg %}
+<div class="main-login-register">
+    <div class="log-register-wrapper">
+        <div class="lr-head">
+            <span>Register</span>
+        </div>
+        <div class="lr-body">
+            {% if form.errors %}
+            <div class="error-list">
+                {% if form.username.errors %}
+                <li>{{form.username.errors.as_text|cut:"* "|cut:"__all__"|cut:"password2"|cut:"username"}}</li>
+                {% endif %}
+
+                {% if form.password2.errors %}
+                <li>{{form.password2.errors.as_text|cut:"* "|cut:"__all__"|cut:"password2"|cut:"username"}}</li>
+                {% endif %}
+            </div>
+            {% endif %}
+
+            <form method="POST" action="" autocomplete="off">
+                {% csrf_token %} {% for field in form %}
+                <div class="form-item">
+                    <label for="{{field.label}}">{{field.label}}:</label>
+                    <div class="user-input">{{field}}</div>
+                </div>
+                {% endfor %}
+                <button type="submit" class="btn btn-log-sign">Sign in</button>
+            </form>
+        </div>
+        <div class="lr-footer">
+            <p>Already have an account?</p>
+            <a href="{% url 'login' %}" class="log-sign-redirect"> Login </a>
+        </div>
+    </div>
+    {% include 'base/log_reg_welcome.html' %}
+</div>
+{% endblock log_reg %}

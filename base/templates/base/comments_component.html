@@ -1,0 +1,43 @@
+{% load static %}
+<div class="post-comments">
+    <form
+        action=""
+        method="POST"
+        autocomplete="off"
+        enctype="multipart/form-data"
+    >
+        {% csrf_token %}
+        <div>{{c_form.content}}</div>
+        <button class="btn" type="submit">Comment</button>
+    </form>
+    <div class="comments-section">
+        <h2>Comments</h2>
+        <div class="comments-wrapper">
+            {% if comments.count > 0 %}
+            {% for comment in comments %}
+            <div class="post-comment">
+                <div class="comment-head">
+                    <img
+                        class="comment-owner-img"
+                        src="{% static comment.owner.avatar.url %}"
+                    />
+                    <div>
+                        <a href="{% url 'user-profile' comment.owner %}">
+                            <p class="comment-owner-name">
+                                {{comment.owner.name}}
+                            </p>
+                        </a>
+                        <span class="comment-date"
+                            >{{comment.created_at|timesince}}</span
+                        >
+                    </div>
+                </div>
+                <div class="comment-body">{{comment.content}}</div>
+            </div>
+            {% endfor %}
+            {% else %}
+            <h4>Be the first to comment!</h4>
+            {% endif %}
+        </div>
+    </div>
+</div>

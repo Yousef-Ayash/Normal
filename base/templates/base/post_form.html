@@ -1,0 +1,69 @@
+{% extends 'main.html' %} {% load static %}
+
+{% block quill %}
+<!-- Quill Things -->
+<link
+    href="https://cdn.quilljs.com/1.3.7/quill.snow.css"
+    media="all"
+    rel="stylesheet"
+/>
+<link
+    href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/darcula.min.css"
+    media="all"
+    rel="stylesheet"
+/>
+<link
+    href="https://cdn.jsdelivr.net/npm/quill-resize-module@1.2.4/dist/resize.min.css"
+    media="all"
+    rel="stylesheet"
+/>
+<link
+    href="/static/django_quill/django_quill.css"
+    media="all"
+    rel="stylesheet"
+/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/highlight.min.js"></script>
+<script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/quill-image-compress@1.2.21/dist/quill.imageCompressor.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@botom/quill-resize-module@2.0.0/dist/quill-resize-module.min.js"></script>
+<script src="/static/django_quill/django_quill.js"></script>
+<!-- Quill Things End -->
+{% endblock quill %}
+
+{% block title %}
+    {% if not form.instance.title %}
+        Share a story of your own | Normal
+    {% else %}
+        Edit {{form.instance.title}} | Normal
+    {% endif %}
+{% endblock title %}
+
+{% block content %}
+<div class="new-post-container">
+    <form
+        action=""
+        method="POST"
+        enctype="multipart/form-data"
+        autocomplete="off"
+    >
+        {% csrf_token %}
+        <div class="np-form-body">
+            <div class="np-title-wrapper">{{form.title}}</div>
+            <div class="np-topic-wrapper">{{form.topic}}</div>
+            <div class="np-body-wrapper">{{form.content}}</div>
+        </div>
+        <div class="np-btns-wrapper">
+            {% url 'login' as login %}
+            {% if login in request.META.HTTP_REFERER %}
+            <a href="{% url 'home' %}" class="btn-cancel"> Cancel </a>
+            {% else %}
+            <a href="{{request.META.HTTP_REFERER}}" class="btn-cancel">
+                Cancel
+            </a>
+            {% endif %}
+
+            <div>{% include "base/post_toggle.html" %}</div>
+        </div>
+    </form>
+</div>
+{% endblock content %}
